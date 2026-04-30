@@ -20,4 +20,21 @@ export class ApiService {
               );
   }
 
+  loadProduct(id: number): Observable<Product> {
+    return this
+              .http
+              .get<Product>(this.baseUrl + id)
+              .pipe(
+                delay(1000) // Simulate network delay
+              );
+  }
+
+  saveProduct(product: Omit<Product, 'id'>): Observable<Product> {
+    return this.http.post<Product>(this.baseUrl, product);
+  }
+
+  deleteProduct(id: number): Observable<void> {
+    return this.http.delete<void>(this.baseUrl + id);
+  }
+
 }

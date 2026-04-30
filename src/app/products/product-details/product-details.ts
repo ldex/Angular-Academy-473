@@ -1,6 +1,8 @@
-import { Component, input } from '@angular/core';
+import { Component, inject, input, isWritableSignal, Signal, signal, WritableSignal } from '@angular/core';
 import { Product } from '../../types/product';
 import { CurrencyPipe, DatePipe, UpperCasePipe } from '@angular/common';
+import { ProductService } from '../product';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-product-details',
@@ -9,5 +11,24 @@ import { CurrencyPipe, DatePipe, UpperCasePipe } from '@angular/common';
   styleUrl: './product-details.css',
 })
 export class ProductDetails {
-  product = input<Product>();
+
+  private productService = inject(ProductService);
+  private router = inject(Router);
+
+  product: Signal<Product | null> = signal(null);
+
+  id = input.required<number>();
+
+  isLoading = this.productService.isLoading;
+  errorMessage = this.productService.errorMessage;
+
+  ngOnInit() {
+    this.product = this.productService.getProductById(this.id());
+  }
+
+  async deleteProduct() {
+      await this.productService.deleteProduct(this.product()!.id);
+      this.router.navigate(['/products']);
+  }
+
 }

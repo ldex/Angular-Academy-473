@@ -1,20 +1,20 @@
 import { Component, inject, Signal, signal, WritableSignal } from '@angular/core';
 import { Product } from '../../types/product';
 import { CurrencyPipe, JsonPipe, SlicePipe, UpperCasePipe } from '@angular/common';
-import { ProductDetails } from "../product-details/product-details";
 import { ProductService } from '../product';
 import { OrderByPipe } from '../orderBy.pipe';
+import { Router, RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-product-list',
-  imports: [CurrencyPipe, UpperCasePipe, OrderByPipe, JsonPipe, SlicePipe, ProductDetails],
+  imports: [CurrencyPipe, UpperCasePipe, OrderByPipe, JsonPipe, SlicePipe, RouterLink],
   templateUrl: './product-list.html',
   styleUrl: './product-list.css',
 })
-export class ProductList {
+export default class ProductList {
 
   private productService = inject(ProductService);
-
+  private router = inject(Router);
 
   pageSize = signal(5);
   start = signal(0);
@@ -35,7 +35,8 @@ export class ProductList {
   selectedProduct: WritableSignal<Product | null> = signal(null);
 
   select(product: Product) {
-    this.selectedProduct.set(product);
+    //this.selectedProduct.set(product);
+    this.router.navigate(['/products', product.id]);
   }
 
   products: Signal<Product[]> = this.productService.getProducts();

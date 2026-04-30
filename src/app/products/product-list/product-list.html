@@ -11,7 +11,7 @@
     {{ products().length }} products.
 
     <ul class="products">
-        @for (product of products() | orderBy: ['-price'] | slice:start():end(); track product.id) {
+        @for (product of products() | orderBy: ['-modifiedDate'] | slice:start():end(); track product.id) {
             <li [class.discontinued]="product.discontinued"
                 [class.selected]="product === selectedProduct()"
                 (click)="select(product)"
@@ -23,12 +23,14 @@
         }
     </ul>
 
+    <div class="right">
+        <a routerLink="new">Create Product...</a>
+    </div>
+
     <div>
         <button [disabled]="start() == 0" (click)="changePage(-1)">Previous</button>
         Page {{ pageNumber() }}
         <button [disabled]="end() >= products().length" (click)="changePage(1)">Next</button>
     </div>
-
-    <app-product-details [product]="selectedProduct()"></app-product-details>
 }
 
